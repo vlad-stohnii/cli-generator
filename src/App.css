@@ -1,38 +1,49 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: #0a2540;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.terminal__container {
+  margin: 50px auto;
+  height: 400px;
+  width: 700px;
+  background-color: #06182c;
+  border-radius: 10px;
+  padding: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.cursor {
+  width: 8px;
+  border: 1px solid green;
+  animation: blink 0.7s step-start 0s infinite;
+  background-color: green;
+}
+
+.command-line {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  color: green;
+}
+.command {
+  margin-left: 5px;
 }
 
-.App-link {
-  color: #61dafb;
+.console {
+
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.result {
+  color: lightgray;
+}
+
+
+@keyframes blink {
+  50% {
+    background-color: transparent;
   }
 }
