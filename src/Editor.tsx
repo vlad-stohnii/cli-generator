@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 interface Props {
   setTerminal: (data: any[]) => void
@@ -11,18 +11,25 @@ const Editor:React.FC<Props> = ({setTerminal}) => {
   const [textarea, setTextarea] = useState<string>('');
   const [frameIndex, setFrameIndex] = useState<number>(0);
   const [frameArray, setFrameArray] = useState<string[][]>([])
+  const renderFunc = () => {
+    setTerminal(result)
+    setType('command');
+    setResult([]);
+    setTextarea('')
+  }
+
 
   const nextFrame = () => {
     if(frameArray[frameIndex + 1]) {
       setTextarea(frameArray[frameIndex + 1].join('\n'))
-    } else {
-      setTextarea('')
+      setFrameIndex(frameIndex + 1)
     }
     let tempArray = [...frameArray];
     tempArray[frameIndex] = textarea.split('\n');
     setFrameArray(tempArray)
-    setFrameIndex(frameIndex + 1)
   }
+
+
   const prevFrame = () => {
     let tempArray = [...frameArray];
     tempArray[frameIndex] = textarea.split('\n');
@@ -32,6 +39,29 @@ const Editor:React.FC<Props> = ({setTerminal}) => {
       setFrameIndex(frameIndex - 1)
     }
   }
+
+  const addFrame = () => {
+    setFrameArray([...frameArray, []])
+    if(frameArray.length !== 0) {
+      setTextarea('')
+      setFrameIndex(frameIndex + 1);
+    } else {
+      let tempArray = [...frameArray];
+      tempArray[frameIndex] = textarea.split('\n');
+      setFrameArray(tempArray)
+      setTextarea('')
+    }
+  }
+
+  const isDisabled = () => {
+    if(type === 'command' || type === 'log') {
+      return false
+    }
+    return !(type === 'frame' && frameArray.length !== 0);
+
+  }
+
+
   const saveElement = () => {
     if(type === 'command') {
       const com = "<c>" + textarea +"<c>"
@@ -47,7 +77,9 @@ const Editor:React.FC<Props> = ({setTerminal}) => {
       let tempArray = [...frameArray];
       tempArray[frameIndex] = textarea.split('\n');
       setResult([...result, tempArray.map((frame) => frame.map(i => '<cons>' + i + '<cons>'))]);
+      setFrameArray([])
       setTextarea('')
+      setFrameIndex(0)
     }
   }
    return (
@@ -67,11 +99,15 @@ const Editor:React.FC<Props> = ({setTerminal}) => {
         </div>
       </div>
       type : {type}
-      <textarea value={textarea} onChange={(e) => setTextarea(e.target.value)}/>
+      <textarea disabled={isDisabled()} value={textarea} onChange={(e) => setTextarea(e.target.value)}/>
       <button onClick={saveElement}>Add Element</button>
       <button onClick={() => console.log(result)}>Log</button>
-      <button onClick={() => setTerminal(result)}>Complete</button>
-      {type === 'frame' && <><button onClick={nextFrame}>Next Frame</button><button onClick={prevFrame}>Prev Frame</button> Frame: {frameIndex + 1}</>}
+      <button onClick={renderFunc}>Complete</button>
+      {type === 'frame' && <>
+        <button onClick={addFrame}>Add Frame</button>
+        <button onClick={nextFrame}>Next Frame</button>
+        <button onClick={prevFrame}>Prev Frame</button>
+          Frames: {frameArray.length} Current: {isDisabled() ? 0:  frameIndex + 1}</>}
       <div>Items: {result.length}</div>
     </div>
   );
