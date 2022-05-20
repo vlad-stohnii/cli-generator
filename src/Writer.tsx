@@ -1,27 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface Props {
-  isTyping: React.Dispatch<React.SetStateAction<boolean>>
+  setIsRerender: () => void
   content: string;
 }
 
-const Writer: React.FC<Props> = ({isTyping, content = ''}) => {
+const Writer: React.FC<Props> = ({setIsRerender, content = ''}) => {
+  const [isTyping, setIsTyping] = useState(true);
+  const cursor = useRef<HTMLDivElement>(null);
   const [typedSuperpower, setTypedSuperpower] = useState('')
+  if (isTyping && cursor.current) {
+    cursor.current.style.animation = 'none'
+  } else {
+    if( cursor.current) {
+      cursor.current.style.animation = 'blink 0.7s step-start 0s infinite'
+    }
+  }
   useEffect(() => {
-    const timeout =setTimeout(() => {
+    const timeout = setTimeout(() => {
       setTypedSuperpower(content.slice(0, typedSuperpower.length + 1))
     }, 100)
     return () => clearTimeout(timeout)
   }, [typedSuperpower])
   useEffect(() => {
     if(typedSuperpower === content) {
-      isTyping(false)
+      setIsTyping(false)
+      setIsRerender();
+      setTimeout(() => {
+        if(cursor.current) {
+          cursor.current.style.display = 'none';
+        }
+      }, 1000)
     }
   }, [typedSuperpower])
   return (
-    <span className={'command'}>
-      {typedSuperpower}
-    </span>
+      <div className={'command-line'}>
+          $<span className={'command'}>
+            {typedSuperpower}
+          </span>
+        <div ref={cursor} className={'cursor'}/>
+      </div>
   );
 };
 

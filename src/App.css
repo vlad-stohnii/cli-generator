@@ -8,8 +8,20 @@
 body {
   background-color: #0a2540;
 }
+button {
+  color: black;
+  margin-right: 10px;
+}
 
-.terminal__container {
+.editor textarea {
+  width: 100%;
+  color: black;
+  height: 200px;
+  resize: none;
+}
+
+
+.terminal__container, .editor {
   margin: 50px auto;
   height: 400px;
   width: 700px;
@@ -33,8 +45,11 @@ body {
   margin-left: 5px;
 }
 
-.console {
-
+.log::before {
+  content: '> ';
+}
+.log-next-line {
+  margin-left: 20px;
 }
 
 .result {
