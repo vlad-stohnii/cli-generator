@@ -43,14 +43,12 @@ const Editor:React.FC<Props> = ({setTerminal}) => {
   const addFrame = () => {
     setFrameArray([...frameArray, []])
     if(frameArray.length !== 0) {
-      setTextarea('')
       setFrameIndex(frameIndex + 1);
-    } else {
-      let tempArray = [...frameArray];
-      tempArray[frameIndex] = textarea.split('\n');
-      setFrameArray(tempArray)
-      setTextarea('')
     }
+    let tempArray = [...frameArray];
+    tempArray[frameIndex] = textarea.split('\n');
+    setFrameArray(tempArray)
+    setTextarea('')
   }
 
   const isDisabled = () => {
@@ -69,8 +67,10 @@ const Editor:React.FC<Props> = ({setTerminal}) => {
       setTextarea('')
     }
     if(type === 'log') {
-      const cons = "<cons>" + textarea +"<cons>"
-      setResult([...result, cons]);
+      let tempArray = textarea.split('\n');
+      setResult([...result, [tempArray.map(i => '<cons>' + i + '<cons>')]])
+      // const cons = "<cons>" + textarea +"<cons>"
+      // setResult([...result, cons]);
       setTextarea('')
     }
     if(type === 'frame') {

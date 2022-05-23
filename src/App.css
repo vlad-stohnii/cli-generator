@@ -31,7 +31,7 @@ button {
 }
 
 .cursor {
-  width: 8px;
+  font-size: 13px;
   border: 1px solid green;
   animation: blink 0.7s step-start 0s infinite;
   background-color: green;

@@ -37,8 +37,9 @@ const Writer: React.FC<Props> = ({setIsRerender, content = ''}) => {
       <div className={'command-line'}>
           $<span className={'command'}>
             {typedSuperpower}
+        <span ref={cursor} className={'cursor'}>&nbsp;</span>
           </span>
-        <div ref={cursor} className={'cursor'}/>
+
       </div>
   );
 };
