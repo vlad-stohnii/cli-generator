@@ -4,10 +4,12 @@ import styled from 'styled-components';
 interface Props {
   close: () => void,
   data: any,
-  setData: React.Dispatch<React.SetStateAction<any[]>>
+  setData: React.Dispatch<React.SetStateAction<any[]>>,
+  item: any,
+  itemId: number
 }
 
-const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
+const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => {
 
   const [type, setType] = useState('prompt');
   const [textarea, setTextarea] = useState<string>('');
@@ -21,14 +23,41 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   }
 
   useEffect(() => {
-    setTextarea('');
-    if (type === 'frames') {
-      setFrameIndex(1);
+    //Select type
+    if(typeof item === 'string') {
+      setType('prompt')
+    } else {
+      if(item.length === 1) {
+        setType('output')
+      } else {
+        setType('frames')
+      }
+    }
+  }, [])
+
+
+
+
+  useEffect(() => {
+    switch (type) {
+      case 'prompt':
+        if(typeof item === 'string')
+          setTextarea(item.split('<c>')[1])
+        break;
+      case 'output':
+        setTextarea(item[0].map((i: string) => i.split('<cons>')[1]).join('\n'))
+        break;
+      case 'frames':
+        setFrameList(item.map((i: string[]) => i.map((str: string) => str.split('<cons>')[1])))
+        setFrameIndex(item.length);
+        break;
     }
   }, [type]);
+
+
+
   useEffect(() => {
-    if (frameIndex === 1) {
-      setFrameList([[]]);
+    if (frameIndex === item.length) {
     } else {
       setFrameList([...frameList, []]);
     }
@@ -37,18 +66,20 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   const saveElement = () => {
     if (type === 'prompt') {
       const com = '<c>' + textarea + '<c>';
-      setData([...data, com]);
-      setTextarea('');
+      let tempData = [...data]
+      tempData[itemId] = com
+      setData(tempData);
     }
     if (type === 'output') {
       let tempArray = textarea.split('\n');
-      setData([...data, [tempArray.map(i => '<cons>' + i + '<cons>')]]);
-      setTextarea('');
+      let tempData = [...data]
+      tempData[itemId] = [tempArray.map(i => '<cons>' + i + '<cons>')]
+      setData(tempData);
     }
     if (type === 'frames') {
-      setData([...data, frameList.map((frame) => frame.map(i => '<cons>' + i + '<cons>'))]);
-      setTextarea('');
-      setFrameIndex(1);
+      let tempData = [...data]
+      tempData[itemId] = frameList.map((frame) => frame.map(i => '<cons>' + i + '<cons>'));
+      setData(tempData);
     }
   };
 
@@ -122,4 +153,4 @@ const TypesItem = styled.div<{ selected: boolean }>`
   background: ${({ selected }) => selected ? '#4d4d4d' : '#8d8d8d'};
 `;
 
-export default NewEditor;
+export default EditEditor;

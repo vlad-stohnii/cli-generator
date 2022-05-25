@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import NewEditor from './NewEditor';
+import EditEditor from './EditEditor';
 
 interface Props {
   item: any;
@@ -11,9 +11,11 @@ interface Props {
 
 const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
   let renderedItem: any;
-
   const [isEditing, setIsEditing] = useState(false);
 
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  }
   if (typeof item === 'string') {
     const com = item.match(/<c>((?!<cons>|<res>|<c>).)*<c>/g);
     if (com)
@@ -33,14 +35,14 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
   }
   return (
     <>
-      {isEditing && <NewEditor close={() => setIsEditing(false)} data={data} setData={setData} />}
+      {isEditing && <EditEditor close={toggleEdit} data={data} item={item} itemId={itemId} setData={setData} />}
       {!isEditing && <Block>
         <BlockContent>
           {typeof renderedItem === 'string' && renderedItem}
-          {typeof renderedItem === 'object' && renderedItem.length === 1 && renderedItem.map((item: any) =>
-            <div>{item.map((i: any) => <div>{i}</div>)}</div>)}
-          {typeof renderedItem === 'object' && renderedItem.length > 1 && renderedItem.map((item: any) =>
-            <Frame>{item.map((i: any) => <div>{i}</div>)}</Frame>)}
+          {typeof renderedItem === 'object' && renderedItem.length === 1 && renderedItem.map((item: any, index: number) =>
+            <div key={index}>{item.map((i: any, key: number) => <div key={key}>{i}</div>)}</div>)}
+          {typeof renderedItem === 'object' && renderedItem.length > 1 && renderedItem.map((item: any, index: number) =>
+            <Frame key={index}>{item.map((i: any, key: number) => <div key={key}>{i}</div>)}</Frame>)}
         </BlockContent>
         <div onClick={() => setData(() => {
           const newArr = [...data];
@@ -48,7 +50,7 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
           return newArr;
         })}>Del
         </div>
-        {/*<div onClick={() => setIsEditing(true)}>Edit</div>*/}
+        <div style={{marginLeft: 8}} onClick={toggleEdit}>Edit</div>
       </Block>}
     </>
   );
