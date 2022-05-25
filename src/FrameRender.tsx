@@ -17,7 +17,7 @@ const FrameRender:React.FC<Props> = ({item, setRerender}) => {
   }
   useEffect(() => {
     let content: any[] = []
-    item[frameIndex].map((i) => {
+    item[frameIndex].forEach((i) => {
       const consoleText = i.match(/<cons>((?!<c>|<res>|<cons>).)*<cons>/g)
         if(consoleText) {
           content.push(consoleText[0].split('<cons>')[1])

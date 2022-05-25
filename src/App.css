@@ -13,6 +13,18 @@ button {
   margin-right: 10px;
 }
 
+.App {
+  display: flex;
+  flex-direction: row;
+  width: 1024px;
+  height: 500px;
+  margin: 120px auto;
+  background-color: #081d33;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/*EDITOR*/
 .editor textarea {
   width: 100%;
   color: black;
@@ -20,14 +32,9 @@ button {
   resize: none;
 }
 
+/*TERMINAL*/
+.terminal__container {
 
-.terminal__container, .editor {
-  margin: 50px auto;
-  height: 400px;
-  width: 700px;
-  background-color: #06182c;
-  border-radius: 10px;
-  padding: 20px;
 }
 
 .cursor {
@@ -44,18 +51,6 @@ button {
 .command {
   margin-left: 5px;
 }
-
-.log::before {
-  content: '> ';
-}
-.log-next-line {
-  margin-left: 20px;
-}
-
-.result {
-  color: lightgray;
-}
-
 
 @keyframes blink {
   50% {
