@@ -85,14 +85,19 @@ const StyledEditor = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 8px;
 
   textarea {
-    padding: 12px;
+    background-color: #124677;
+    padding: 8px;
     border: none;
-    color: black;
+    color: #fff;
     height: 88px;
-    font-size: 16px;
+    font-size: 14px;
     resize: none;
+    outline: none;
+    border-top: 1px solid #081d33;
+    border-bottom: 1px solid #081d33;
   }
 `;
 const EditorTypes = styled.div`
@@ -105,21 +110,31 @@ const EditorTypes = styled.div`
 const SaveButton = styled.button`
   width: 100%;
   cursor: pointer;
-  padding: 12px;
+  padding: 8px;
+  font-size: 14px;
   border: none;
   border-bottom: 1px solid grey;
-
+  background: #00d4ff;;
+  color: #081d33;
+  transition: background-color 0.1s;
   &:hover {
-    opacity: 0.9;
+    background-color: #fff;
   }
 `;
 
 const TypesItem = styled.div<{ selected: boolean }>`
+  cursor: pointer;
   width: 100%;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   text-align: center;
-  background: ${({ selected }) => selected ? '#4d4d4d' : '#8d8d8d'};
+  font-size: 14px;
+  color: #081d33;
+  transition: background-color 0.1s;
+  &:hover {
+    background-color: #fff;
+  }
+  background-color: ${({ selected }) => selected ? '#fff' : '#00d4ff'};
 `;
 
 export default NewEditor;

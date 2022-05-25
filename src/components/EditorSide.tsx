@@ -35,11 +35,15 @@ const Editor = styled.div`
 
 const Item = styled.div`
   text-align: center;
-  background: #464646;
-  color: #fff;
-  padding: 12px;
+  cursor: pointer;
+  background: #00d4ff;;
+  color: #081d33;
+  padding: 8px;
   border: none;
-  border-radius: 5px;
+  transition: background-color 0.1s;
+  &:hover {
+    background-color: #fff;
+  }
 `;
 
 export default EditorSide;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import EditEditor from './EditEditor';
+import Popup from './Popup';
 
 interface Props {
   item: any;
@@ -15,7 +16,7 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
-  }
+  };
   if (typeof item === 'string') {
     const com = item.match(/<c>((?!<cons>|<res>|<c>).)*<c>/g);
     if (com)
@@ -44,13 +45,7 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
           {typeof renderedItem === 'object' && renderedItem.length > 1 && renderedItem.map((item: any, index: number) =>
             <Frame key={index}>{item.map((i: any, key: number) => <div key={key}>{i}</div>)}</Frame>)}
         </BlockContent>
-        <div onClick={() => setData(() => {
-          const newArr = [...data];
-          newArr.splice(itemId, 1);
-          return newArr;
-        })}>Del
-        </div>
-        <div style={{marginLeft: 8}} onClick={toggleEdit}>Edit</div>
+        <Popup toggleEdit={toggleEdit} data={data} setData={setData} itemId={itemId} />
       </Block>}
     </>
   );
@@ -58,17 +53,23 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
 
 const Frame = styled.div`
   border: 1px solid grey;
+  background-color: #1a3e6c;
+  padding: 4px;
+  margin-right: 8px;
+  border-radius: 4px;
   margin-bottom: 8px;
 `;
 
 
 const Block = styled.div`
+  position: relative;
   display: flex;
   justify-content: space-between;
-  padding: 12px;
+  padding: 8px;
   width: auto;
   margin-bottom: 8px;
-  border: 1px solid #fff;
+  border: 1px solid #8095ff;
+  background-color: #0c2e4e;
 `;
 const BlockContent = styled.div`
   width: 100%;
