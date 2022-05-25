@@ -41,15 +41,27 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
   useEffect(() => {
     switch (type) {
       case 'prompt':
-        if(typeof item === 'string')
+        if(typeof item === 'string') {
           setTextarea(item.split('<c>')[1])
+        } else {
+          setTextarea('')
+        }
         break;
       case 'output':
-        setTextarea(item[0].map((i: string) => i.split('<cons>')[1]).join('\n'))
+        if(typeof item === 'string') {
+          setTextarea('')
+        } else {
+          setTextarea(item[0].map((i: string) => i.split('<cons>')[1]).join('\n'))
+        }
         break;
       case 'frames':
-        setFrameList(item.map((i: string[]) => i.map((str: string) => str.split('<cons>')[1])))
-        setFrameIndex(item.length);
+        if(typeof item === 'string') {
+          setFrameList([['']])
+          setFrameIndex(0);
+        } else {
+          setFrameList(item.map((i: string[]) => i.map((str: string) => str.split('<cons>')[1])))
+          setFrameIndex(item.length);
+        }
         break;
     }
   }, [type]);
