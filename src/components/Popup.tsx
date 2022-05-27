@@ -12,8 +12,8 @@ const Popup: React.FC<Props> = ({ toggleEdit, setData, data, itemId }) => {
   const [isOpened, setIsOpened] = useState(false);
   const openToggle = () => setIsOpened(!isOpened);
   return (
-    <>
-      <Dots onClick={openToggle}>
+    <Container onClick={openToggle}>
+      <Dots>
         <div />
         <div />
         <div />
@@ -26,53 +26,67 @@ const Popup: React.FC<Props> = ({ toggleEdit, setData, data, itemId }) => {
           return newArr;
         })}>Delete</Button></Pop>}
       {isOpened && <Background onClick={openToggle}/>}
-    </>
+    </Container>
   );
 };
 
-const Dots = styled.div`
-  display: flex;
+
+const Container = styled.div`
+  width: 48px;
   cursor: pointer;
-  flex-direction: row;
+  min-height: 48px;
+  display: flex;
+  justify-content: center;
+
+`
+
+const Dots = styled.div`
+  margin-top: 14px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 
   div {
-    margin-right: 4px;
-    width: 6px;
-    height: 6px;
+    width: 4px; 
+    height: 4px;
     border-radius: 50%;
     background-color: #fff;
   }
 `;
 
 const Button = styled.button`
-  padding: 4px;
   font-size: 14px;
-  width: 70px;
-  background: #00d4ff;
+  width: 120px;
   border: 0;
-  color: #081d33;
-  transition: background-color 0.1s;
-
-  &:first-child {
-    border-right: 1px solid #081d33;
-  }
-
+  color: #c9d1d9;
+  text-align: left;
+  padding: 4px 8px 4px 16px;
+  background-color: #161b22;
   &:hover {
-    background-color: #fff;
+    color: #ffffff;
+    background-color: #1f6feb;
   }
 `;
 
 const Pop = styled.div`
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border: 1px solid #30363d;
+  background-color: #161b22;
+  border-radius: 6px;
   z-index: 99;
-  border: 1px solid #4c5996;
-  position: absolute;
   display: flex;
-  top: 30px;
-  right: -1px;
+  flex-direction: column;
+  position: absolute;
+  top: 48px;
+  right: 0;
 `;
 const Background = styled.div`
   position: fixed;
+  
+  cursor: auto;
   top: 0;
   left: 0;
   z-index: 98;

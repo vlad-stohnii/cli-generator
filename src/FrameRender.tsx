@@ -34,8 +34,8 @@ const FrameRender:React.FC<Props> = ({item, setRerender}) => {
   }, [currentFrame])
 
   return (
-    <div>
-      {currentFrame.map((i, index) => <div className={index === 0 ? 'log': 'log-next-line'} key={index}>{i}</div>)}
+    <div style={{whiteSpace: 'break-spaces', wordBreak: 'break-all'}}>
+      {currentFrame.map((i, index) => <div key={index}>{i}</div>)}
     </div>
   );
 };

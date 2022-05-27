@@ -41,9 +41,13 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
         <BlockContent>
           {typeof renderedItem === 'string' && renderedItem}
           {typeof renderedItem === 'object' && renderedItem.length === 1 && renderedItem.map((item: any, index: number) =>
-            <div key={index}>{item.map((i: any, key: number) => <div key={key}>{i}</div>)}</div>)}
+            <div key={index}>
+              {item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && '...'}</div>)}
+            </div>)}
           {typeof renderedItem === 'object' && renderedItem.length > 1 && renderedItem.map((item: any, index: number) =>
-            <Frame key={index}>{item.map((i: any, key: number) => <div key={key}>{i}</div>)}</Frame>)}
+            <Frame key={index}>
+              {item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && '...'}</div>)}
+            </Frame>)}
         </BlockContent>
         <Popup toggleEdit={toggleEdit} data={data} setData={setData} itemId={itemId} />
       </Block>}
@@ -52,26 +56,28 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
 };
 
 const Frame = styled.div`
-  border: 1px solid grey;
+  border: 1px solid #30363d;
   background-color: #1a3e6c;
   padding: 4px;
-  margin-right: 8px;
   border-radius: 4px;
   margin-bottom: 8px;
 `;
 
 
 const Block = styled.div`
+  white-space: break-spaces;
+  word-break: break-all;
+  height: 100%;
   position: relative;
   display: flex;
   justify-content: space-between;
-  padding: 8px;
   width: auto;
   margin-bottom: 8px;
-  border: 1px solid #8095ff;
-  background-color: #0c2e4e;
+  background-color: #06182c;
 `;
 const BlockContent = styled.div`
   width: 100%;
+  align-self: center;
+  margin: 8px 0 8px 8px;
 `;
 export default EditItem;

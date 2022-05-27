@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import ConsoleObject from './ConsoleObject';
 import styled from 'styled-components';
@@ -12,12 +12,14 @@ function App() {
   const [rerender, setRerender] = useState(false);
   const [trigger, setTrigger] = useState(false);
   const [index, setIndex] = useState(0);
-  const rerenderFunc = () => setRerender(!rerender)
-
   const [dataFromEditor, setDataFromEditor] = useState<any>(null);
-
   const [dataForRender, setDataForRender] = useState<Data>([])
   const [data, setData] = useState<Data>([]);
+  const cons = useRef<HTMLDivElement>(null);
+
+
+  const rerenderFunc = () => setRerender(!rerender)
+
   const setTerminal = (data: any[]) => {
     setTrigger(!trigger)
     setData([])
@@ -42,61 +44,84 @@ function App() {
   }, [rerender]);
 
 
+  useEffect(() => {
+    if(cons.current) {
+      cons.current.scrollTo({top: cons.current.scrollHeight});
+    }
+  })
+
   return (
     <Application>
       <EditorSide setDataFromEditor={setDataFromEditor} data={dataForRender}/>
-      <Terminal>
+      <TerminalSide>
+        <Terminal>
+          <Dots/>
+          <Console ref={cons}>
+          {data.map((item, index) => {
+            return <ConsoleObject key={index} setRerender={rerenderFunc} item={item} />;
+          })}
+          </Console>
+        </Terminal>
         <StartButton onClick={() => {
-          let id = window.setTimeout(function() {}, 0);
+         let id = window.setTimeout(function() {}, 0);
           while (id--) {
             window.clearTimeout(id);
           }
           setTerminal(dataFromEditor)}}>
           <PlayButton />
         </StartButton>
-        <Dots/>
-        {data.map((item, index) => {
-          return <ConsoleObject key={index} setRerender={rerenderFunc} item={item} />;
-        })}
-      </Terminal>
+      </TerminalSide>
     </Application>
   );
 }
 
 
-const StartButton = styled.button`
-position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: none;
+const StartButton = styled.div`
   border: none;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 10px;
-  opacity: 0;
+  background-color: green;
+  width: 80px;
+  height: 40px;
   &:hover {
-    background: white;
-    opacity: 0.1;
+    opacity: 0.7;
   }
 `
 
+const TerminalSide = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const Terminal = styled.div`
-  position: relative;
+
+  display: flex;
+  flex-direction: column;
   height: 300px;
   min-width: 500px;
   background-color: #06182c;
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #333;
 `
+
+const Console = styled.div`
+  max-width: 472px;
+  font-size: 14px;
+  flex: 1 1;
+  overflow: hidden;
+  margin: 12px 14px;
+`
+
 const Application = styled.div`
   display: flex;
   flex-direction: row;
   width: 1024px;
   margin: 120px auto;
   padding: 32px;
-  background-color: #081d33;
-  justify-content: center;
-  gap: 30px;
+  justify-content: space-between;
   align-items: flex-start;
 `
 

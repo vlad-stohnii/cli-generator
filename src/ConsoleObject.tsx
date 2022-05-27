@@ -1,6 +1,7 @@
 import React from 'react';
 import Writer from './Writer';
 import FrameRender from './FrameRender';
+import styled from 'styled-components';
 
 interface Props {
   item: string | string[][],
@@ -10,7 +11,6 @@ interface Props {
 const ConsoleObject:React.FC<Props> = ({item, setRerender}) => {
   let type = '';
   let content: string| string[][] | null = null;
-
 
   if(typeof item === 'string') {
     const codeText = item.match(/<c>((?!<cons>|<res>|<c>).)*<c>/g)

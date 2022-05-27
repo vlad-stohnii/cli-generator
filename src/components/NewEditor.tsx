@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Textarea from './Textarea';
 
 interface Props {
   close: () => void,
@@ -9,7 +10,7 @@ interface Props {
 
 const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
 
-  const [type, setType] = useState('prompt');
+  const [type, setType] = useState('typing');
   const [textarea, setTextarea] = useState<string>('');
   const [frameIndex, setFrameIndex] = useState<number>(0);
   const [frameList, setFrameList] = useState<string[][]>([]);
@@ -17,8 +18,8 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   const onChangeFrame = (e: React.ChangeEvent<HTMLTextAreaElement>, key: number) => {
     let tempArray = [...frameList];
     tempArray[key] = (e.target.value).split('\n');
-    setFrameList(tempArray)
-  }
+    setFrameList(tempArray);
+  };
 
   useEffect(() => {
     setTextarea('');
@@ -35,7 +36,7 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   }, [frameIndex]);
 
   const saveElement = () => {
-    if (type === 'prompt') {
+    if (type === 'typing') {
       const com = '<c>' + textarea + '<c>';
       setData([...data, com]);
       setTextarea('');
@@ -55,8 +56,8 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   return (
     <StyledEditor>
       <EditorTypes>
-        <TypesItem selected={type === 'prompt'} onClick={() => setType('prompt')}>
-          Prompt
+        <TypesItem selected={type === 'typing'} onClick={() => setType('typing')}>
+          Typing
         </TypesItem>
         <TypesItem selected={type === 'output'} onClick={() => setType('output')}>
           Output
@@ -66,9 +67,10 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
         </TypesItem>
       </EditorTypes>
       {}
-      {type === 'frames' ? frameList.map((frame, key) => <textarea value={frame.join('\n')} key={key}
-                                                                   onChange={(e) => onChangeFrame(e,key)} />) :
-        <textarea value={textarea} onChange={(e) => setTextarea(e.target.value)} />}
+      {type === 'frames' ? frameList.map((frame, key) => <Textarea value={frame.join('\n')}
+                                                                   onChangeFrame={onChangeFrame} index={key} key={key} />) :
+        <Textarea value={textarea} setTextarea={setTextarea} />
+      }
       {type === 'frames' && <SaveButton onClick={() => {
         setFrameIndex(frameIndex + 1);
       }
@@ -88,11 +90,11 @@ const StyledEditor = styled.div`
   margin-bottom: 8px;
 
   textarea {
-    background-color: #124677;
+    background-color: #06182c;
     padding: 8px;
     border: none;
     color: #fff;
-    height: 88px;
+    height: 32px;
     font-size: 14px;
     resize: none;
     outline: none;
@@ -110,31 +112,35 @@ const EditorTypes = styled.div`
 const SaveButton = styled.button`
   width: 100%;
   cursor: pointer;
-  padding: 8px;
   font-size: 14px;
-  border: none;
-  border-bottom: 1px solid grey;
-  background: #00d4ff;;
-  color: #081d33;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+  background-color: #161b22;
+  padding: 12px;
   transition: background-color 0.1s;
+
   &:hover {
-    background-color: #fff;
+    color: #ffffff;
+    background-color: #1f6feb;
   }
 `;
 
 const TypesItem = styled.div<{ selected: boolean }>`
   cursor: pointer;
   width: 100%;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: ${({ selected }) => selected ? '#ffffff' : '#c9d1d9'};
+  background-color: ${({ selected }) => selected ? '#34343a' : '#161b22'};
   text-align: center;
   font-size: 14px;
-  color: #081d33;
+  border: 1px solid #30363d;
   transition: background-color 0.1s;
+
   &:hover {
-    background-color: #fff;
+    color: #ffffff;
+    background-color: #1f6feb;
   }
-  background-color: ${({ selected }) => selected ? '#fff' : '#00d4ff'};
 `;
 
 export default NewEditor;

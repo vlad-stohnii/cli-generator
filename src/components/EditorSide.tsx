@@ -29,20 +29,21 @@ const EditorSide: React.FC<Props> = ({ setDataFromEditor }) => {
 
 
 const Editor = styled.div`
-  width: 100%;
+  width: 500px;
 `;
 
 
 const Item = styled.div`
   text-align: center;
   cursor: pointer;
-  background: #00d4ff;;
-  color: #081d33;
-  padding: 8px;
-  border: none;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+  background-color: #161b22;
+  padding: 12px;
   transition: background-color 0.1s;
   &:hover {
-    background-color: #fff;
+    color: #ffffff;
+    background-color: #1f6feb;
   }
 `;
 

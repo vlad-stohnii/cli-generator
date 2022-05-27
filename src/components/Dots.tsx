@@ -13,12 +13,14 @@ const Dots = () => {
 
 const DotsStyle = styled.div`
   display: flex;
-  margin-bottom: 8px;
+  align-items: center;
+  text-align: center;
+  height: 34px;
   flex-direction: row;
-  gap: 8px;
   div {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    margin-left: 8px;
+    height: 12px;
     border-radius: 50%;
   }
 `

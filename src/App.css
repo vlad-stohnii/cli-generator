@@ -3,6 +3,7 @@
   padding: 0;
   color: #fff;
   font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
 }
 
 body {
@@ -10,7 +11,6 @@ body {
 }
 button {
   color: black;
-  /*margin-right: 10px;*/
   cursor: pointer;
 }
 
@@ -29,7 +29,6 @@ button {
 .editor textarea {
   width: 100%;
   color: black;
-  height: 200px;
   resize: none;
 }
 
@@ -46,7 +45,8 @@ button {
 }
 
 .command-line {
-  display: flex;
+  white-space: break-spaces;
+  word-break: break-all;
   color: green;
 }
 .command {

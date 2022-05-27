@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const PlayButton = () => {
   return (
-    <Play>
+    <Play style={{fill: '#fff'}}>
       <svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'
            x='0px'
            y='0px'
@@ -45,12 +45,8 @@ const PlayButton = () => {
 };
 
 const Play = styled.div`
-  width: 100px;
-  height: 100px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
 `
 
 export default PlayButton;

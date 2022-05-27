@@ -19,7 +19,7 @@ const Writer: React.FC<Props> = ({setIsRerender, content = ''}) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setTypedSuperpower(content.slice(0, typedSuperpower.length + 1))
-    }, 100)
+    }, 50)
     return () => clearTimeout(timeout)
   }, [typedSuperpower])
   useEffect(() => {
