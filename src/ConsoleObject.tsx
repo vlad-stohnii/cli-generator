@@ -1,10 +1,10 @@
 import React from 'react';
 import Writer from './Writer';
-import FrameRender from './FrameRender';
+import FrameRender, { Frame } from './FrameRender';
 import styled from 'styled-components';
 
 interface Props {
-  item: string | string[][],
+  item: string | Frame[],
   setRerender: () => void,
 }
 

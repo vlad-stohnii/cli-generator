@@ -13,7 +13,6 @@ interface Props {
 const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
   let renderedItem: any;
   const [isEditing, setIsEditing] = useState(false);
-
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
@@ -25,7 +24,7 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
     renderedItem = [];
     item.forEach((i: any) => {
       let temp: any[] = [];
-      i.forEach((text: any) => {
+      i.frame.forEach((text: any) => {
         const consoleText = text.match(/<cons>((?!<c>|<res>|<cons>).)*<cons>/g);
         if (consoleText) {
           temp.push(consoleText[0].split('<cons>')[1]);

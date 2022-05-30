@@ -14,11 +14,17 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   const [textarea, setTextarea] = useState<string>('');
   const [frameIndex, setFrameIndex] = useState<number>(0);
   const [frameList, setFrameList] = useState<string[][]>([]);
+  const [timings, setTiming] = useState<number[]>([]);
 
   const onChangeFrame = (e: React.ChangeEvent<HTMLTextAreaElement>, key: number) => {
     let tempArray = [...frameList];
     tempArray[key] = (e.target.value).split('\n');
     setFrameList(tempArray);
+  };
+  const onChangeTiming = (e: React.ChangeEvent<HTMLInputElement>, key: number) => {
+    let tempArray = [...timings];
+    tempArray[key] = +e.target.value;
+    setTiming(tempArray);
   };
 
   useEffect(() => {
@@ -31,7 +37,8 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
     if (frameIndex === 1) {
       setFrameList([[]]);
     } else {
-      setFrameList([...frameList, []]);
+      setFrameList(f => [...f, []]);
+      setTiming(t => [...t, 0]);
     }
   }, [frameIndex]);
 
@@ -42,12 +49,23 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
       setTextarea('');
     }
     if (type === 'output') {
-      let tempArray = textarea.split('\n');
-      setData([...data, [tempArray.map(i => '<cons>' + i + '<cons>')]]);
+      let frameObject: object[] = [];
+      frameObject.push({
+        nextFrameTiming: null,
+        frame: textarea.split('\n').map(i => '<cons>' + i + '<cons>')
+      });
+      setData([...data, frameObject]);
       setTextarea('');
     }
     if (type === 'frames') {
-      setData([...data, frameList.map((frame) => frame.map(i => '<cons>' + i + '<cons>'))]);
+      let frameObject: object[] = [];
+      frameList.forEach((element, index) => {
+        frameObject.push({
+          nextFrameTiming: timings[index] || null,
+          frame: element.map(i => '<cons>' + i + '<cons>')
+        });
+      });
+      setData([...data, frameObject]);
       setTextarea('');
       setFrameIndex(1);
     }
@@ -67,8 +85,16 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
         </TypesItem>
       </EditorTypes>
       {}
-      {type === 'frames' ? frameList.map((frame, key) => <Textarea value={frame.join('\n')}
-                                                                   onChangeFrame={onChangeFrame} index={key} key={key} />) :
+      {type === 'frames' ? frameList.map((frame, key) => {
+          return frameList.length > 1 ?
+            <>
+              <Textarea value={frame.join('\n')}
+                        onChangeFrame={onChangeFrame} index={key} key={key} />
+              {!(key === frameList.length - 1) &&
+                <input type={'number'} value={timings[key]} onChange={(e) => onChangeTiming(e, key)} />}
+            </> : <Textarea value={frame.join('\n')}
+                            onChangeFrame={onChangeFrame} index={key} key={key} />;
+        }) :
         <Textarea value={textarea} setTextarea={setTextarea} />
       }
       {type === 'frames' && <SaveButton onClick={() => {
@@ -88,6 +114,10 @@ const StyledEditor = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 8px;
+
+  input {
+    background-color: black;
+  }
 
   textarea {
     background-color: #06182c;
@@ -116,7 +146,7 @@ const SaveButton = styled.button`
   color: #c9d1d9;
   border: 1px solid #30363d;
   background-color: #161b22;
-  padding: 12px;
+  padding: 14px;
   transition: background-color 0.1s;
 
   &:hover {
@@ -128,8 +158,8 @@ const SaveButton = styled.button`
 const TypesItem = styled.div<{ selected: boolean }>`
   cursor: pointer;
   width: 100%;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 14px;
+  padding-bottom: 14px;
   color: ${({ selected }) => selected ? '#ffffff' : '#c9d1d9'};
   background-color: ${({ selected }) => selected ? '#34343a' : '#161b22'};
   text-align: center;

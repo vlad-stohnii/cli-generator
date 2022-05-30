@@ -16,6 +16,7 @@ const EditorSide: React.FC<Props> = ({ setDataFromEditor }) => {
     setIsAdding(!isAdding);
   };
   useEffect(() => {
+
     setDataFromEditor(data);
   }, [data]);
   return (
@@ -39,7 +40,7 @@ const Item = styled.div`
   color: #c9d1d9;
   border: 1px solid #30363d;
   background-color: #161b22;
-  padding: 12px;
+  padding: 14px;
   transition: background-color 0.1s;
   &:hover {
     color: #ffffff;

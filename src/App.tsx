@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import EditorSide from './components/EditorSide';
 import Dots from './components/Dots';
 import PlayButton from './components/PlayButton';
+import { Frame } from './FrameRender';
 
-type Data = (string | string[][])[]
+type Data = (string | Frame[])[]
 
 function App() {
   const [rerender, setRerender] = useState(false);
@@ -28,7 +29,7 @@ function App() {
   useEffect(() => {
     setData([])
     if(dataForRender[0]) {
-      setData([...data, dataForRender[0]]);
+      setData(d => [...d,dataForRender[0]]);
       setIndex(1)
     }
   }, [dataForRender, trigger])
@@ -36,7 +37,7 @@ function App() {
   useEffect(() => {
     const delay = setTimeout(() => {
       if(dataForRender[index]) {
-        setData([...data, dataForRender[index]]);
+        setData(d => [...d, dataForRender[index]]);
         setIndex(index + 1)
       }
     }, 1000);
@@ -104,7 +105,6 @@ const Terminal = styled.div`
   min-width: 500px;
   background-color: #06182c;
   border-radius: 5px;
-  border: 1px solid #333;
 `
 
 const Console = styled.div`
