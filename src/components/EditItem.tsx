@@ -41,7 +41,7 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
           {typeof renderedItem === 'string' && renderedItem}
           {typeof renderedItem === 'object' && renderedItem.length === 1 && renderedItem.map((item: any, index: number) =>
             <div key={index}>
-              {item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && '...'}</div>)}
+              {item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && item.length > 3 && '...'}</div>)}
             </div>)}
           {typeof renderedItem === 'object' && renderedItem.length > 1 && renderedItem.map((item: any, index: number) =>
             <Frame key={index}>

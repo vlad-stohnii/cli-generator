@@ -3,9 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 interface Props {
   setIsRerender: () => void
   content: string;
+  scroll: () => void
 }
 
-const Writer: React.FC<Props> = ({setIsRerender, content = ''}) => {
+const Writer: React.FC<Props> = ({setIsRerender, content = '', scroll}) => {
   const [isTyping, setIsTyping] = useState(true);
   const cursor = useRef<HTMLDivElement>(null);
   const [typedSuperpower, setTypedSuperpower] = useState('')
@@ -17,6 +18,7 @@ const Writer: React.FC<Props> = ({setIsRerender, content = ''}) => {
     }
   }
   useEffect(() => {
+    scroll()
     const timeout = setTimeout(() => {
       setTypedSuperpower(content.slice(0, typedSuperpower.length + 1))
     }, 50)

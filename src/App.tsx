@@ -45,11 +45,11 @@ function App() {
   }, [rerender]);
 
 
-  useEffect(() => {
+  const scrollFunc = () => {
     if(cons.current) {
       cons.current.scrollTo({top: cons.current.scrollHeight});
     }
-  })
+  }
 
   return (
     <Application>
@@ -59,7 +59,7 @@ function App() {
           <Dots/>
           <Console ref={cons}>
           {data.map((item, index) => {
-            return <ConsoleObject key={index} setRerender={rerenderFunc} item={item} />;
+            return <ConsoleObject key={index} scroll={scrollFunc} setRerender={rerenderFunc} item={item} />;
           })}
           </Console>
         </Terminal>
@@ -110,9 +110,13 @@ const Terminal = styled.div`
 const Console = styled.div`
   max-width: 472px;
   font-size: 14px;
+  overflow: auto;
   flex: 1 1;
-  overflow: hidden;
   margin: 12px 14px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const Application = styled.div`

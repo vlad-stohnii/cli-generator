@@ -12,7 +12,7 @@ const Textarea:React.FC<Props> = ({value, setTextarea, index, onChangeFrame}) =>
   useEffect(() => {
     if(text.current) {
       text.current.style.height = "1px";
-      text.current.style.height = `${text.current.scrollHeight - 2}px`;
+      text.current.style.height = `${text.current.scrollHeight - 27}px`;
     }
   }, [value])
   return (

@@ -1,14 +1,14 @@
 import React from 'react';
 import Writer from './Writer';
 import FrameRender, { Frame } from './FrameRender';
-import styled from 'styled-components';
 
 interface Props {
   item: string | Frame[],
   setRerender: () => void,
+  scroll: () => void
 }
 
-const ConsoleObject:React.FC<Props> = ({item, setRerender}) => {
+const ConsoleObject:React.FC<Props> = ({item, setRerender, scroll}) => {
   let type = '';
   let content: string| string[][] | null = null;
 
@@ -25,8 +25,8 @@ const ConsoleObject:React.FC<Props> = ({item, setRerender}) => {
 
   return (
     <>
-      {type === 'code' && typeof content !== 'object' && <Writer setIsRerender={setRerender} content={content}/>}
-      {type === 'frame' && typeof item === 'object' && <FrameRender setRerender={setRerender} item={item}/>}
+      {type === 'code' && typeof content !== 'object' && <Writer scroll={scroll} setIsRerender={setRerender} content={content}/>}
+      {type === 'frame' && typeof item === 'object' && <FrameRender scroll={scroll} setRerender={setRerender} item={item}/>}
     </>
   );
 };

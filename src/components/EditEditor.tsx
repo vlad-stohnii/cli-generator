@@ -159,14 +159,16 @@ const StyledEditor = styled.div`
 
   input {
     background-color: black;
+    border: 0;
+    padding: 11px 8px;
   }
 
   textarea {
     background-color: #06182c;
-    padding: 8px;
+    padding: 14px 8px;
     border: none;
     color: #fff;
-    height: 32px;
+    height: 20px;
     font-size: 14px;
     resize: none;
     outline: none;

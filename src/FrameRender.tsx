@@ -8,10 +8,11 @@ export interface Frame {
 
 interface Props {
   item: Frame[],
-  setRerender: () => void
+  setRerender: () => void,
+  scroll: () => void
  }
 
-const FrameRender:React.FC<Props> = ({item, setRerender}) => {
+const FrameRender:React.FC<Props> = ({item, setRerender, scroll}) => {
 
   const [frameIndex, setFrameIndex] = useState(0);
   const [currentFrame, setCurrentFrame ] = useState<any[]>([]);
@@ -33,6 +34,7 @@ const FrameRender:React.FC<Props> = ({item, setRerender}) => {
     setCurrentFrame(content);
   }, [frameIndex]);
   useEffect(() => {
+    scroll();
     if(frameIndex === item.length - 1) {
       setRerender()
     } else {
