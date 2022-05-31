@@ -25,6 +25,9 @@ const Label = styled.label`
   color: #081d33;
   text-align: center;
   line-height: 40px;
+  &:hover {
+    opacity: 0.8;
+  }
 `
 
 
