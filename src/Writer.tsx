@@ -21,7 +21,7 @@ const Writer: React.FC<Props> = ({setIsRerender, content = '', scroll}) => {
     scroll()
     const timeout = setTimeout(() => {
       setTypedSuperpower(content.slice(0, typedSuperpower.length + 1))
-    }, 50)
+    }, 100)
     return () => clearTimeout(timeout)
   }, [typedSuperpower])
   useEffect(() => {

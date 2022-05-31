@@ -4,19 +4,23 @@ import styled from 'styled-components';
 import EditItem from './EditItem';
 
 interface Props {
-  data: any;
   setDataFromEditor: React.Dispatch<any>;
+  dataFromFile: any;
 }
 
 
-const EditorSide: React.FC<Props> = ({ setDataFromEditor }) => {
+const EditorSide: React.FC<Props> = ({ setDataFromEditor,dataFromFile }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const toggle = () => {
     setIsAdding(!isAdding);
   };
   useEffect(() => {
-
+    if(dataFromFile) {
+      setData(dataFromFile)
+    }
+  }, [dataFromFile])
+  useEffect(() => {
     setDataFromEditor(data);
   }, [data]);
   return (
@@ -36,6 +40,7 @@ const Editor = styled.div`
 
 const Item = styled.div`
   text-align: center;
+  border-radius: 4px;
   cursor: pointer;
   color: #c9d1d9;
   border: 1px solid #30363d;

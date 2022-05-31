@@ -32,25 +32,27 @@ const Popup: React.FC<Props> = ({ toggleEdit, setData, data, itemId }) => {
 
 
 const Container = styled.div`
-  width: 48px;
+  width: 40px;
+  height: 40px;
+  margin: 4px;
+  align-items: center;
+  border-radius: 2px;
+  background-color: #071e38;
   cursor: pointer;
-  min-height: 48px;
   display: flex;
   justify-content: center;
-
 `
 
 const Dots = styled.div`
-  margin-top: 14px;
-  height: 20px;
+  height: 21px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
 
   div {
-    width: 4px; 
-    height: 4px;
+    width: 3px; 
+    height: 3px;
     border-radius: 50%;
     background-color: #fff;
   }
@@ -85,7 +87,6 @@ const Pop = styled.div`
 `;
 const Background = styled.div`
   position: fixed;
-  
   cursor: auto;
   top: 0;
   left: 0;

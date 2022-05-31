@@ -49,9 +49,6 @@ button {
   word-break: break-all;
   color: green;
 }
-.command {
-  margin-left: 5px;
-}
 
 @keyframes blink {
   50% {

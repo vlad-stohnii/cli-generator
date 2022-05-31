@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Dots = () => {
   return (
     <DotsStyle>
-      <div style={{background: '#ff5f57'}}/>
+      <div style={{background: '#ff5f57', marginLeft: 12}}/>
       <div style={{background: '#febc2e'}}/>
       <div style={{background: '#28c840'}}/>
     </DotsStyle>

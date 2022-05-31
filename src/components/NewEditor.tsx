@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Textarea from './Textarea';
+import DropDown from './DropDown';
+import { options } from '../constants';
 
 interface Props {
   close: () => void,
@@ -12,8 +14,8 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
 
   const [type, setType] = useState('typing');
   const [textarea, setTextarea] = useState<string>('');
-  const [frameIndex, setFrameIndex] = useState<number>(0);
-  const [frameList, setFrameList] = useState<string[][]>([]);
+  const [frameIndex, setFrameIndex] = useState<number>(1);
+  const [frameList, setFrameList] = useState<string[][]>([[]]);
   const [timings, setTiming] = useState<number[]>([]);
 
   const onChangeFrame = (e: React.ChangeEvent<HTMLTextAreaElement>, key: number) => {
@@ -21,24 +23,28 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
     tempArray[key] = (e.target.value).split('\n');
     setFrameList(tempArray);
   };
-  const onChangeTiming = (e: React.ChangeEvent<HTMLInputElement>, key: number) => {
+  const onChangeTiming = (ms: number, key: number) => {
     let tempArray = [...timings];
-    tempArray[key] = +e.target.value;
+    tempArray[key] = ms;
     setTiming(tempArray);
   };
 
   useEffect(() => {
-    setTextarea('');
-    if (type === 'frames') {
-      setFrameIndex(1);
-    }
-  }, [type]);
-  useEffect(() => {
     if (frameIndex === 1) {
       setFrameList([[]]);
+      setTiming([0]);
     } else {
       setFrameList(f => [...f, []]);
-      setTiming(t => [...t, 0]);
+      if(frameList.length === 1) {
+        setTiming(t => [...t, 0]);
+      } else {
+        setTiming(t => {
+          let copy = [...t];
+          copy[timings.length - 1] = copy[timings.length - 2];
+          copy = [...copy, 0];
+          return copy
+        })
+      }
     }
   }, [frameIndex]);
 
@@ -87,12 +93,12 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
       {}
       {type === 'frames' ? frameList.map((frame, key) => {
           return frameList.length > 1 ?
-            <>
+            <TextAreaWithTiming key={key}>
               <Textarea value={frame.join('\n')}
-                        onChangeFrame={onChangeFrame} index={key} key={key} />
+                        onChangeFrame={onChangeFrame} index={key}/>
               {!(key === frameList.length - 1) &&
-                <input type={'number'} value={timings[key]} onChange={(e) => onChangeTiming(e, key)} />}
-            </> : <Textarea value={frame.join('\n')}
+                <DropDown options={options} selected={timings[key]}  setItem={onChangeTiming} index={key} />}
+            </TextAreaWithTiming> : <Textarea value={frame.join('\n')}
                             onChangeFrame={onChangeFrame} index={key} key={key} />;
         }) :
         <Textarea value={textarea} setTextarea={setTextarea} />
@@ -156,6 +162,18 @@ const SaveButton = styled.button`
     background-color: #1f6feb;
   }
 `;
+
+const TextAreaWithTiming = styled.div`
+  display: flex;
+  flex-direction: row;
+  background-color: #06182c;
+  border-top: 1px solid #081d33;
+  border-bottom: 1px solid #081d33;
+  textarea {
+    flex: auto;
+    border: none;
+  }
+`
 
 const TypesItem = styled.div<{ selected: boolean }>`
   cursor: pointer;

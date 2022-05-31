@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Textarea from './Textarea';
+import DropDown from './DropDown';
+import { options } from '../constants';
 
 interface Props {
   close: () => void,
@@ -24,9 +26,9 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
     setFrameList(tempArray);
   };
 
-  const onChangeTiming = (e: React.ChangeEvent<HTMLInputElement>, key: number) => {
+  const onChangeTiming = (ms: number, key: number) => {
     let tempArray = [...timings];
-    tempArray[key] = +e.target.value;
+    tempArray[key] = ms;
     setTiming(tempArray);
   };
 
@@ -78,7 +80,16 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
     if (frameIndex === item.length) {
     } else {
       setFrameList(f => [...f, []]);
-      setTiming(t => [...t, 0]);
+      if(frameList.length === 1) {
+        setTiming(t => [...t, 0]);
+      } else {
+        setTiming(t => {
+          let copy = [...t];
+          copy[timings.length - 1] = copy[timings.length - 2];
+          copy = [...copy, 0];
+          return copy
+        })
+      }
     }
   }, [frameIndex]);
 
@@ -129,12 +140,12 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
       {}
       {type === 'frames' ? frameList.map((frame, key) => {
           return frameList.length > 1 ?
-            <>
+            <TextAreaWithTiming key={key}>
               <Textarea value={frame.join('\n')}
-                        onChangeFrame={onChangeFrame} index={key} key={key} />
-              { !(key === frameList.length - 1) &&
-                <input type={'number'} value={timings[key]} onChange={(e) => onChangeTiming(e, key)} />}
-            </> : <Textarea value={frame.join('\n')}
+                        onChangeFrame={onChangeFrame} index={key}/>
+              {!(key === frameList.length - 1) &&
+                <DropDown options={options} selected={timings[key]}  setItem={onChangeTiming} index={key} />}
+            </TextAreaWithTiming> : <Textarea value={frame.join('\n')}
                             onChangeFrame={onChangeFrame} index={key} key={key} />;
         }) :
         <Textarea value={textarea} setTextarea={setTextarea} />
@@ -182,6 +193,19 @@ const EditorTypes = styled.div`
   width: 100%;
   justify-content: space-around;
 `;
+
+const TextAreaWithTiming = styled.div`
+  display: flex;
+  flex-direction: row;
+  background-color: #06182c;
+  border-top: 1px solid #081d33;
+  border-bottom: 1px solid #081d33;
+  textarea {
+    flex: auto;
+    border: none;
+  }
+`
+
 
 const SaveButton = styled.button`
   width: 100%;

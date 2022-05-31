@@ -55,10 +55,9 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
 };
 
 const Frame = styled.div`
-  border: 1px solid #30363d;
   background-color: #1a3e6c;
   padding: 4px;
-  border-radius: 4px;
+  border-radius: 2px;
   margin-bottom: 8px;
 `;
 
@@ -72,6 +71,7 @@ const Block = styled.div`
   justify-content: space-between;
   width: auto;
   margin-bottom: 8px;
+  border-radius: 4px;
   background-color: #06182c;
 `;
 const BlockContent = styled.div`
