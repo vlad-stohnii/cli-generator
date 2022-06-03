@@ -15,13 +15,13 @@ const DropDown: React.FC<Props> = ({ options, setItem, index, selected }) => {
       {isOpen && <DropBg onClick={() => setIsOpen(false)} />}
       <DropContent>
         <OpenButton onClick={() => setIsOpen(true)}>
-          {selected}
+          {selected}ms
         </OpenButton>
         {isOpen && <DropOptions>{
           options.map((option, key) => <Option key={key} onClick={() => {
             setIsOpen(false);
             setItem(option, index);
-          }}>{option}</Option>)
+          }}>{option}ms</Option>)
         }
         </DropOptions>}
       </DropContent>
@@ -40,7 +40,7 @@ const DropBg = styled.div`
 const DropContent = styled.div`
   position: relative;
   margin: 4px;
-  width: 40px;
+  width: 60px;
   height: 40px;
 `;
 
@@ -49,7 +49,7 @@ const DropOptions = styled.div`
   padding-bottom: 4px;
   border: 1px solid #30363d;
   background-color: #161b22;
-  border-radius: 2px;
+  border-radius: 6px;
   position: absolute;
   top: 40px;
   right: 0;
@@ -59,6 +59,7 @@ const DropOptions = styled.div`
 `;
 
 const OpenButton = styled.button`
+  font-size: 14px;
   height: 100%;
   width: 100%;
   border: none;
@@ -75,7 +76,6 @@ const Option = styled.button`
   height: 100%;
   border: none;
   width: 80px;
-  border-radius: 2px;
 
   font-size: 14px;
   border: 0;

@@ -32,11 +32,6 @@ button {
   resize: none;
 }
 
-/*TERMINAL*/
-.terminal__container {
-
-}
-
 .cursor {
   font-size: 13px;
   border: 1px solid green;

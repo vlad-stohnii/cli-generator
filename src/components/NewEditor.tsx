@@ -32,7 +32,7 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   useEffect(() => {
     if (frameIndex === 1) {
       setFrameList([[]]);
-      setTiming([0]);
+      setTiming([500]);
     } else {
       setFrameList(f => [...f, []]);
       if(frameList.length === 1) {
@@ -90,7 +90,6 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
           Frames
         </TypesItem>
       </EditorTypes>
-      {}
       {type === 'frames' ? frameList.map((frame, key) => {
           return frameList.length > 1 ?
             <TextAreaWithTiming key={key}>

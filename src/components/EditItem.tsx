@@ -57,7 +57,6 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
 const Frame = styled.div`
   background-color: #1a3e6c;
   padding: 4px;
-  border-radius: 2px;
   margin-bottom: 8px;
 `;
 
