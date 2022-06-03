@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-
-export interface Frame {
-  frame: string[],
-  nextFrameTiming: number
-}
+import { DataObject } from './components/types';
 
 
 interface Props {
-  item: Frame[],
+  item: DataObject,
   setRerender: () => void,
   scroll: () => void
  }
@@ -15,27 +11,22 @@ interface Props {
 const FrameRender:React.FC<Props> = ({item, setRerender, scroll}) => {
 
   const [frameIndex, setFrameIndex] = useState(0);
-  const [currentFrame, setCurrentFrame ] = useState<any[]>([]);
+  const [currentFrame, setCurrentFrame ] = useState<string[]>([]);
   const changeFrame = () => {
-    if(typeof item === 'object' && item[frameIndex + 1]) {
+    if(typeof item.object === 'object' && item.object[frameIndex + 1]) {
       setTimeout(() => {
         setFrameIndex(frameIndex + 1);
-      }, item[frameIndex].nextFrameTiming || 1000)
+      }, item.object[frameIndex].timing || 1000)
     }
   }
   useEffect(() => {
-    let content: any[] = []
-    item[frameIndex].frame.forEach((i) => {
-      const consoleText = i.match(/<cons>((?!<c>|<res>|<cons>).)*<cons>/g)
-        if(consoleText) {
-          content.push(consoleText[0].split('<cons>')[1])
-        }
-      })
-    setCurrentFrame(content);
+    if(typeof item.object === 'object') {
+      setCurrentFrame(item.object[frameIndex].frame);
+    }
   }, [frameIndex]);
   useEffect(() => {
     scroll();
-    if(frameIndex === item.length - 1) {
+    if(frameIndex === item.object.length - 1) {
       setRerender()
     } else {
       changeFrame()

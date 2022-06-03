@@ -5,11 +5,9 @@ import styled from 'styled-components';
 import EditorSide from './components/EditorSide';
 import Dots from './components/Dots';
 import PlayButton from './components/PlayButton';
-import { Frame } from './FrameRender';
 import { saveAs } from 'file-saver';
 import Import from './components/Import';
-
-type Data = (string | Frame[])[]
+import { Data } from './components/types';
 
 function App() {
   const [rerender, setRerender] = useState(false);
@@ -19,7 +17,7 @@ function App() {
   const [dataForRender, setDataForRender] = useState<Data>([])
   const [data, setData] = useState<Data>([]);
   const [file, setFile] = useState<File | null>(null);
-  const [dataFromFile, setDataFromFile] = useState<any>(null);
+  const [dataFromFile, setDataFromFile] = useState<Data>([]);
   const cons = useRef<HTMLDivElement>(null);
 
 

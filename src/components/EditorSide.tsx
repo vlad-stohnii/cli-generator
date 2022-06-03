@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import NewEditor from './NewEditor';
 import styled from 'styled-components';
 import EditItem from './EditItem';
+import { Data } from './types';
 
 interface Props {
-  setDataFromEditor: React.Dispatch<any>;
-  dataFromFile: any;
+  setDataFromEditor: React.Dispatch<React.SetStateAction<Data>>;
+  dataFromFile: Data;
 }
 
 
 const EditorSide: React.FC<Props> = ({ setDataFromEditor,dataFromFile }) => {
-  const [isAdding, setIsAdding] = useState(false);
-  const [data, setData] = useState<any[]>([]);
+  const [isAdding, setIsAdding] = useState<boolean>(false);
+  const [data, setData] = useState<Data>([]);
   const toggle = () => {
     setIsAdding(!isAdding);
   };
@@ -21,11 +22,12 @@ const EditorSide: React.FC<Props> = ({ setDataFromEditor,dataFromFile }) => {
     }
   }, [dataFromFile])
   useEffect(() => {
+    console.log(data);
     setDataFromEditor(data);
   }, [data]);
   return (
     <Editor>
-      {data.map((i: any, index) => <EditItem setData={setData} item={i} itemId={index} data={data} key={index} />)}
+      {data.map((i, index) => <EditItem setData={setData} item={i} itemId={index} data={data} key={index} />)}
       {isAdding && <NewEditor data={data}  setData={setData} close={toggle} />}
       {!isAdding && <Item onClick={toggle}>+</Item>}
     </Editor>

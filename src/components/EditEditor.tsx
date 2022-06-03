@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import Textarea from './Textarea';
 import DropDown from './DropDown';
 import { options } from '../constants';
+import { Data, DataObject, Frame } from './types';
 
 interface Props {
   close: () => void,
-  data: any,
-  setData: React.Dispatch<React.SetStateAction<any[]>>,
-  item: any,
+  data: Data,
+  setData: React.Dispatch<React.SetStateAction<Data>>,
+  item: DataObject,
   itemId: number
 }
 
@@ -34,10 +35,10 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
 
   useEffect(() => {
     //Select type
-    if (typeof item === 'string') {
+    if (typeof item.object === 'string') {
       setType('typing');
     } else {
-      if (item.length === 1) {
+      if (item.object.length === 1) {
         setType('output');
       } else {
         setType('frames');
@@ -49,27 +50,27 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
   useEffect(() => {
     switch (type) {
       case 'typing':
-        if (typeof item === 'string') {
-          setTextarea(item.split('<c>')[1]);
+        if (typeof item.object === 'string') {
+          setTextarea(item.object);
         } else {
           setTextarea('');
         }
         break;
       case 'output':
-        if (typeof item === 'string') {
+        if (typeof item.object === 'string') {
           setTextarea('');
         } else {
-          setTextarea(item[0].frame.map((i: string) => i.split('<cons>')[1]).join('\n'));
+          setTextarea(item.object[0].frame.join('\n'));
         }
         break;
       case 'frames':
-        if (typeof item === 'string') {
+        if (typeof item.object === 'string') {
           setFrameList([['']]);
           setFrameIndex(0);
         } else {
-          setFrameList(item.map((i: any) => i.frame.map((str: string) => str.split('<cons>')[1])));
-          setTiming(item.map((i: any) => i.nextFrameTiming))
-          setFrameIndex(item.length);
+          setFrameList(item.object.map((i: any) => i.frame));
+          setTiming(item.object.map((i: any) => i.nextFrameTiming))
+          setFrameIndex(item.object.length);
         }
         break;
     }
@@ -77,7 +78,7 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
 
 
   useEffect(() => {
-    if (frameIndex === item.length) {
+    if (frameIndex === item.object.length) {
     } else {
       setFrameList(f => [...f, []]);
       if(frameList.length === 1) {
@@ -95,31 +96,37 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
 
   const saveElement = () => {
     if (type === 'typing') {
-      const com = '<c>' + textarea + '<c>';
       let tempData = [...data];
-      tempData[itemId] = com;
+      tempData[itemId] = {
+        object: textarea,
+        timing: null
+      };
       setData(tempData);
     }
     if (type === 'output') {
-      let frameObject: object[] = [];
-      frameObject.push({
-        nextFrameTiming: null,
-        frame: textarea.split('\n').map(i => '<cons>' + i + '<cons>')
-      });
       let tempData = [...data];
-      tempData[itemId] = [...frameObject];
+      tempData[itemId] = {
+        object: [{
+          timing: null,
+          frame: textarea.split('\n')
+        }],
+         timing: null
+      };
       setData(tempData);
     }
     if (type === 'frames') {
-      let frameObject: object[] = [];
+      let frameObject: Frame[] = [];
       frameList.forEach((element, index) => {
         frameObject.push({
-          nextFrameTiming: timings[index] || null,
-          frame: element.map(i => '<cons>' + i + '<cons>')
+          timing: timings[index] || null,
+          frame: element
         });
       });
       let tempData = [...data];
-      tempData[itemId] = [...frameObject];
+      tempData[itemId] = {
+        object: frameObject,
+        timing: null
+      };
       setData(tempData);
     }
   };

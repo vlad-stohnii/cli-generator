@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Data } from './types';
 
 interface Props {
   toggleEdit: () => void
-  setData: React.Dispatch<React.SetStateAction<any[]>>
+  setData: React.Dispatch<React.SetStateAction<Data>>
   data: any
   itemId: number
 }

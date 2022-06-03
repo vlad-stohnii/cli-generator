@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import Textarea from './Textarea';
 import DropDown from './DropDown';
 import { options } from '../constants';
+import { Data, Frame } from './types';
 
 interface Props {
   close: () => void,
-  data: any,
-  setData: React.Dispatch<React.SetStateAction<any[]>>
+  data: Data,
+  setData: React.Dispatch<React.SetStateAction<Data>>
 }
 
 const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
@@ -50,28 +51,34 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
 
   const saveElement = () => {
     if (type === 'typing') {
-      const com = '<c>' + textarea + '<c>';
-      setData([...data, com]);
+      setData([...data, {
+        object: textarea,
+        timing: null
+      }]);
       setTextarea('');
     }
     if (type === 'output') {
-      let frameObject: object[] = [];
-      frameObject.push({
-        nextFrameTiming: null,
-        frame: textarea.split('\n').map(i => '<cons>' + i + '<cons>')
-      });
-      setData([...data, frameObject]);
+      setData([...data, {
+        object: [{
+          frame: textarea.split('\n'),
+          timing: null
+        }],
+        timing: null
+      }]);
       setTextarea('');
     }
     if (type === 'frames') {
-      let frameObject: object[] = [];
+      let frameObject: Frame[] = [];
       frameList.forEach((element, index) => {
         frameObject.push({
-          nextFrameTiming: timings[index] || null,
-          frame: element.map(i => '<cons>' + i + '<cons>')
+          timing: timings[index] || null,
+          frame: element
         });
       });
-      setData([...data, frameObject]);
+      setData([...data, {
+        object: frameObject,
+        timing: null
+      }]);
       setTextarea('');
       setFrameIndex(1);
     }

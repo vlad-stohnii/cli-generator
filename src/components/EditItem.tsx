@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import EditEditor from './EditEditor';
 import Popup from './Popup';
+import { Data, DataObject } from './types';
 
 interface Props {
-  item: any;
-  setData: React.Dispatch<React.SetStateAction<any[]>>;
+  item: DataObject;
+  setData: React.Dispatch<React.SetStateAction<Data>>;
   itemId: number;
-  data: any;
+  data: Data;
 }
 
 const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
@@ -16,21 +17,12 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
-  if (typeof item === 'string') {
-    const com = item.match(/<c>((?!<cons>|<res>|<c>).)*<c>/g);
-    if (com)
-      renderedItem = '~ ' + com[0].split('<c>')[1];
+  if (typeof item.object === 'string') {
+      renderedItem = '~ ' + item.object;
   } else {
     renderedItem = [];
-    item.forEach((i: any) => {
-      let temp: any[] = [];
-      i.frame.forEach((text: any) => {
-        const consoleText = text.match(/<cons>((?!<c>|<res>|<cons>).)*<cons>/g);
-        if (consoleText) {
-          temp.push(consoleText[0].split('<cons>')[1]);
-        }
-      });
-      renderedItem.push(temp);
+    item.object.forEach((i) => {
+      renderedItem.push(i.frame);
     });
   }
   return (
