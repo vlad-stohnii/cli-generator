@@ -4,6 +4,7 @@ import Textarea from './Textarea';
 import DropDown from './DropDown';
 import { options } from '../constants';
 import { Data, Frame } from './types';
+import InlineDropDown from './InlineDropDown';
 
 interface Props {
   close: () => void,
@@ -17,7 +18,8 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   const [textarea, setTextarea] = useState<string>('');
   const [frameIndex, setFrameIndex] = useState<number>(1);
   const [frameList, setFrameList] = useState<string[][]>([[]]);
-  const [timings, setTiming] = useState<number[]>([]);
+  const [timings, setTimings] = useState<number[]>([]);
+  const [timing, setTiming] = useState<number>(500);
 
   const onChangeFrame = (e: React.ChangeEvent<HTMLTextAreaElement>, key: number) => {
     let tempArray = [...frameList];
@@ -27,25 +29,20 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   const onChangeTiming = (ms: number, key: number) => {
     let tempArray = [...timings];
     tempArray[key] = ms;
-    setTiming(tempArray);
+    setTimings(tempArray);
   };
 
   useEffect(() => {
     if (frameIndex === 1) {
       setFrameList([[]]);
-      setTiming([500]);
+      setTimings([500]);
     } else {
       setFrameList(f => [...f, []]);
-      if(frameList.length === 1) {
-        setTiming(t => [...t, 0]);
-      } else {
-        setTiming(t => {
-          let copy = [...t];
-          copy[timings.length - 1] = copy[timings.length - 2];
-          copy = [...copy, 0];
-          return copy
-        })
-      }
+      setTimings(t => {
+        let copy = [...t];
+        copy = [...copy, copy[timings.length - 1]];
+        return copy;
+      });
     }
   }, [frameIndex]);
 
@@ -53,7 +50,7 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
     if (type === 'typing') {
       setData([...data, {
         object: textarea,
-        timing: null
+        timing: timing
       }]);
       setTextarea('');
     }
@@ -63,7 +60,7 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
           frame: textarea.split('\n'),
           timing: null
         }],
-        timing: null
+        timing: timing
       }]);
       setTextarea('');
     }
@@ -75,10 +72,12 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
           frame: element
         });
       });
+      frameObject[frameList.length - 1].timing = null;
       setData([...data, {
         object: frameObject,
-        timing: null
+        timing: timings[frameList.length - 1]
       }]);
+
       setTextarea('');
       setFrameIndex(1);
     }
@@ -97,17 +96,17 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
           Frames
         </TypesItem>
       </EditorTypes>
-      {type === 'frames' ? frameList.map((frame, key) => {
-          return frameList.length > 1 ?
-            <TextAreaWithTiming key={key}>
-              <Textarea value={frame.join('\n')}
-                        onChangeFrame={onChangeFrame} index={key}/>
-              {!(key === frameList.length - 1) &&
-                <DropDown options={options} selected={timings[key]}  setItem={onChangeTiming} index={key} />}
-            </TextAreaWithTiming> : <Textarea value={frame.join('\n')}
-                            onChangeFrame={onChangeFrame} index={key} key={key} />;
-        }) :
-        <Textarea value={textarea} setTextarea={setTextarea} />
+      {type === 'frames' ? frameList.map((frame, key) =>
+          <TextAreaWithTiming key={key}>
+            <Textarea value={frame.join('\n')}
+                      onChangeFrame={onChangeFrame} index={key} />
+            <DropDown options={options} selected={timings[key]} setItem={onChangeTiming} index={key} />
+          </TextAreaWithTiming>
+        ) :
+        <TextAreaWithTiming>
+          <Textarea value={textarea} setTextarea={setTextarea} />
+          <InlineDropDown options={options} selected={timing} setItem={setTiming} />
+        </TextAreaWithTiming>
       }
       {type === 'frames' && <SaveButton onClick={() => {
         setFrameIndex(frameIndex + 1);
@@ -175,11 +174,12 @@ const TextAreaWithTiming = styled.div`
   background-color: #06182c;
   border-top: 1px solid #081d33;
   border-bottom: 1px solid #081d33;
+
   textarea {
     flex: auto;
     border: none;
   }
-`
+`;
 
 const TypesItem = styled.div<{ selected: boolean }>`
   cursor: pointer;

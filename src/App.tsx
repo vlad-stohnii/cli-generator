@@ -37,12 +37,14 @@ function App() {
   }, [dataForRender, trigger])
 
   useEffect(() => {
+    const nextTiming = dataForRender[index - 1]?.timing;
+    const timing = nextTiming ? nextTiming : 1000;
     const delay = setTimeout(() => {
       if(dataForRender[index]) {
         setData(d => [...d, dataForRender[index]]);
         setIndex(index + 1)
       }
-    }, 1000);
+    }, timing);
     return () => clearTimeout(delay);
   }, [rerender]);
 

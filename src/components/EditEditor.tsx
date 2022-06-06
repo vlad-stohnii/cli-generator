@@ -4,6 +4,7 @@ import Textarea from './Textarea';
 import DropDown from './DropDown';
 import { options } from '../constants';
 import { Data, DataObject, Frame } from './types';
+import InlineDropDown from './InlineDropDown';
 
 interface Props {
   close: () => void,
@@ -19,7 +20,8 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
   const [textarea, setTextarea] = useState<string>('');
   const [frameIndex, setFrameIndex] = useState<number>(0);
   const [frameList, setFrameList] = useState<string[][]>([]);
-  const [timings, setTiming] = useState<number[]>([]);
+  const [timings, setTimings] = useState<number[]>([]);
+  const [timing, setTiming] = useState<number>(500);
 
   const onChangeFrame = (e: React.ChangeEvent<HTMLTextAreaElement>, key: number) => {
     let tempArray = [...frameList];
@@ -30,7 +32,7 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
   const onChangeTiming = (ms: number, key: number) => {
     let tempArray = [...timings];
     tempArray[key] = ms;
-    setTiming(tempArray);
+    setTimings(tempArray);
   };
 
   useEffect(() => {
@@ -52,6 +54,7 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
       case 'typing':
         if (typeof item.object === 'string') {
           setTextarea(item.object);
+          setTiming(item.timing ? item.timing : 500);
         } else {
           setTextarea('');
         }
@@ -59,8 +62,10 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
       case 'output':
         if (typeof item.object === 'string') {
           setTextarea('');
+          setTiming(500);
         } else {
           setTextarea(item.object[0].frame.join('\n'));
+          setTiming(item.timing ? item.timing : 500);
         }
         break;
       case 'frames':
@@ -68,8 +73,11 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
           setFrameList([['']]);
           setFrameIndex(0);
         } else {
-          setFrameList(item.object.map((i: any) => i.frame));
-          setTiming(item.object.map((i: any) => i.nextFrameTiming))
+          setFrameList(item.object.map((i) => i.frame));
+          let notNull = item.object.filter(i => i.timing !== null);
+          let tempTimings = notNull.map((i) => i.timing!);
+          tempTimings.push(item.timing ? item.timing : 500);
+          setTimings([...tempTimings])
           setFrameIndex(item.object.length);
         }
         break;
@@ -82,12 +90,11 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
     } else {
       setFrameList(f => [...f, []]);
       if(frameList.length === 1) {
-        setTiming(t => [...t, 0]);
+        setTimings(t => [...t, 0]);
       } else {
-        setTiming(t => {
+        setTimings(t => {
           let copy = [...t];
-          copy[timings.length - 1] = copy[timings.length - 2];
-          copy = [...copy, 0];
+          copy = [...copy, copy[timings.length - 1]];
           return copy
         })
       }
@@ -99,7 +106,7 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
       let tempData = [...data];
       tempData[itemId] = {
         object: textarea,
-        timing: null
+        timing: timing
       };
       setData(tempData);
     }
@@ -110,7 +117,7 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
           timing: null,
           frame: textarea.split('\n')
         }],
-         timing: null
+         timing: timing
       };
       setData(tempData);
     }
@@ -122,12 +129,14 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
           frame: element
         });
       });
+      frameObject[frameList.length - 1].timing = null;
       let tempData = [...data];
       tempData[itemId] = {
         object: frameObject,
-        timing: null
+        timing: timings[frameList.length - 1]
       };
       setData(tempData);
+
     }
   };
 
@@ -144,18 +153,17 @@ const EditEditor: React.FC<Props> = ({ close, data, setData, itemId, item }) => 
           Frames
         </TypesItem>
       </EditorTypes>
-      {}
-      {type === 'frames' ? frameList.map((frame, key) => {
-          return frameList.length > 1 ?
-            <TextAreaWithTiming key={key}>
+      {type === 'frames' ? frameList.map((frame, key) =>
+          <TextAreaWithTiming key={key}>
               <Textarea value={frame.join('\n')}
                         onChangeFrame={onChangeFrame} index={key}/>
-              {!(key === frameList.length - 1) &&
-                <DropDown options={options} selected={timings[key]}  setItem={onChangeTiming} index={key} />}
-            </TextAreaWithTiming> : <Textarea value={frame.join('\n')}
-                            onChangeFrame={onChangeFrame} index={key} key={key} />;
-        }) :
-        <Textarea value={textarea} setTextarea={setTextarea} />
+                <DropDown options={options} selected={timings[key]}  setItem={onChangeTiming} index={key} />
+            </TextAreaWithTiming>
+        ) :
+        <TextAreaWithTiming>
+          <Textarea value={textarea} setTextarea={setTextarea}/>
+          <InlineDropDown options={options} selected={timing}  setItem={setTiming} />
+        </TextAreaWithTiming>
       }
       {type === 'frames' && <SaveButton onClick={() => {
         setFrameIndex(frameIndex + 1);

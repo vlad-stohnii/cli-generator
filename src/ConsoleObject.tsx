@@ -12,7 +12,7 @@ interface Props {
 const ConsoleObject:React.FC<Props> = ({item, setRerender, scroll}) => {
   return (
     <>
-      {typeof item.object === 'string' &&  <Writer scroll={scroll} setIsRerender={setRerender} content={item.object}/>}
+      {typeof item.object === 'string' &&  <Writer scroll={scroll} setIsRerender={setRerender} item={item}/>}
       {typeof item.object !== 'string' && <FrameRender scroll={scroll} setRerender={setRerender} item={item}/>}
     </>
   );

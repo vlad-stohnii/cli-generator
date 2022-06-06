@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { DataObject } from './components/types';
 
 interface Props {
   setIsRerender: () => void
-  content: string;
+  item: DataObject;
   scroll: () => void
 }
 
-const Writer: React.FC<Props> = ({setIsRerender, content = '', scroll}) => {
+const Writer: React.FC<Props> = ({setIsRerender, item, scroll}) => {
   const [isTyping, setIsTyping] = useState(true);
   const cursor = useRef<HTMLDivElement>(null);
   const [typedSuperpower, setTypedSuperpower] = useState('')
@@ -20,19 +21,20 @@ const Writer: React.FC<Props> = ({setIsRerender, content = '', scroll}) => {
   useEffect(() => {
     scroll()
     const timeout = setTimeout(() => {
-      setTypedSuperpower(content.slice(0, typedSuperpower.length + 1))
+      if(typeof item.object === 'string')
+      setTypedSuperpower(item.object.slice(0, typedSuperpower.length + 1))
     }, 100)
     return () => clearTimeout(timeout)
   }, [typedSuperpower])
   useEffect(() => {
-    if(typedSuperpower === content) {
+    if(typedSuperpower === item.object) {
       setIsTyping(false)
       setIsRerender();
       setTimeout(() => {
         if(cursor.current) {
           cursor.current.style.display = 'none';
         }
-      }, 1000)
+      }, item.timing ? item.timing / 2 : 1000)
     }
   }, [typedSuperpower])
   return (
