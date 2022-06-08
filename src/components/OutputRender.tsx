@@ -10,9 +10,7 @@ interface Props {
 const OutputRender: React.FC<Props> = ({setRerender, item, scroll}) => {
   useEffect(() => {
     setRerender();
-    return () =>  {
-      scroll()
-    }
+    scroll()
   },[])
   return (
     <div style={{ whiteSpace: 'break-spaces', wordBreak: 'break-all' }}>
