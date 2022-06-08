@@ -11,7 +11,7 @@ const Import:React.FC<Props> = ({setFile}) => {
       <Label htmlFor={'hidden'}>Import</Label>
       <HiddenInput id={'hidden'} onChange={(e) => {
         e.target.files && setFile(e.target.files[0])
-      }} type={'file'} accept={".txt"}/>
+      }} type={'file'} accept={".json"}/>
     </>
   );
 };
@@ -33,6 +33,7 @@ const Label = styled.label`
 
 const HiddenInput = styled.input`
   position: absolute;
+  display: none;
   width: 1px;
   height: 1px;
   background: none;

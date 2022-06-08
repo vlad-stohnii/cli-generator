@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import NewEditor from './NewEditor';
 import styled from 'styled-components';
 import EditItem from './EditItem';
-import { Data } from './types';
+import { ConsoleObjects } from './types';
 
 interface Props {
-  setDataFromEditor: React.Dispatch<React.SetStateAction<Data>>;
-  dataFromFile: Data;
+  setDataFromEditor: React.Dispatch<React.SetStateAction<ConsoleObjects>>;
+  dataFromFile: ConsoleObjects;
 }
 
 
 const EditorSide: React.FC<Props> = ({ setDataFromEditor,dataFromFile }) => {
   const [isAdding, setIsAdding] = useState<boolean>(false);
-  const [data, setData] = useState<Data>([]);
+  const [data, setData] = useState<ConsoleObjects>([]);
   const toggle = () => {
     setIsAdding(!isAdding);
   };
@@ -22,7 +22,6 @@ const EditorSide: React.FC<Props> = ({ setDataFromEditor,dataFromFile }) => {
     }
   }, [dataFromFile])
   useEffect(() => {
-    console.log(data);
     setDataFromEditor(data);
   }, [data]);
   return (

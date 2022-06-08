@@ -1,10 +1,11 @@
 import React from 'react';
 import Writer from './Writer';
 import FrameRender from './FrameRender';
-import { DataObject } from './components/types';
+import { ConsoleObjectType } from './components/types';
+import OutputRender from './components/OutputRender';
 
 interface Props {
-  item: DataObject,
+  item: ConsoleObjectType,
   setRerender: () => void,
   scroll: () => void
 }
@@ -12,8 +13,9 @@ interface Props {
 const ConsoleObject:React.FC<Props> = ({item, setRerender, scroll}) => {
   return (
     <>
-      {typeof item.object === 'string' &&  <Writer scroll={scroll} setIsRerender={setRerender} item={item}/>}
-      {typeof item.object !== 'string' && <FrameRender scroll={scroll} setRerender={setRerender} item={item}/>}
+      {'input' in item &&  <Writer scroll={scroll} setIsRerender={setRerender} item={item}/>}
+      {'output' in item &&  <OutputRender item={item} setRerender={setRerender} scroll={scroll}/>}
+      {'frames' in item && <FrameRender scroll={scroll} setRerender={setRerender} item={item}/>}
     </>
   );
 };

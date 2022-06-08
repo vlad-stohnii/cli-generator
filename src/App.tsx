@@ -5,19 +5,18 @@ import styled from 'styled-components';
 import EditorSide from './components/EditorSide';
 import Dots from './components/Dots';
 import PlayButton from './components/PlayButton';
-import { saveAs } from 'file-saver';
 import Import from './components/Import';
-import { Data } from './components/types';
+import { ConsoleObjects } from './components/types';
 
 function App() {
   const [rerender, setRerender] = useState(false);
   const [trigger, setTrigger] = useState(false);
   const [index, setIndex] = useState(0);
   const [dataFromEditor, setDataFromEditor] = useState<any>([]);
-  const [dataForRender, setDataForRender] = useState<Data>([])
-  const [data, setData] = useState<Data>([]);
+  const [dataForRender, setDataForRender] = useState<ConsoleObjects>([])
+  const [data, setData] = useState<ConsoleObjects>([]);
   const [file, setFile] = useState<File | null>(null);
-  const [dataFromFile, setDataFromFile] = useState<Data>([]);
+  const [dataFromFile, setDataFromFile] = useState<ConsoleObjects>([]);
   const cons = useRef<HTMLDivElement>(null);
 
 
@@ -36,19 +35,22 @@ function App() {
     }
   }, [dataForRender, trigger])
 
-  useEffect(() => {
-    console.log(dataFromEditor);
-  }, [dataFromEditor])
 
   useEffect(() => {
-    const nextTiming = dataForRender[index - 1]?.timing;
-    const timing = nextTiming ? nextTiming : 1000;
-    const delay = setTimeout(() => {
-      if(dataForRender[index]) {
-        setData(d => [...d, dataForRender[index]]);
-        setIndex(index + 1)
+    let element = dataForRender[index - 1];
+    let timing = 0;
+    let delay: NodeJS.Timeout;
+    if(element){
+      if ('input' in element || 'output' in element) {
+        timing = element.timing;
       }
-    }, timing);
+      delay = setTimeout(() => {
+        if (dataForRender[index]) {
+          setData(d => [...d, dataForRender[index]]);
+          setIndex(index + 1);
+        }
+      }, timing);
+    }
     return () => clearTimeout(delay);
   }, [rerender]);
 
@@ -74,6 +76,15 @@ function App() {
       cons.current.scrollTo({top: cons.current.scrollHeight});
     }
   }
+  const exportData = () => {
+    const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(dataFromEditor)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "data.json";
+    link.click();
+  };
 
   return (
     <Application>
@@ -97,11 +108,7 @@ function App() {
             <PlayButton />
           </StartButton>
           <Import setFile={setFile}/>
-          <BottomButton onClick={() => {
-            let obj = JSON.stringify(dataFromEditor);
-            let blob = new Blob( [obj], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, "dynamic.txt");
-          }}>Export</BottomButton>
+          <BottomButton onClick={exportData}>Export</BottomButton>
         </TerminalBottomButtons>
       </TerminalSide>
     </Application>

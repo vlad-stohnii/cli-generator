@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DataObject } from './components/types';
+import { ConsoleObjectType } from './components/types';
 
 interface Props {
   setIsRerender: () => void
-  item: DataObject;
+  item: ConsoleObjectType;
   scroll: () => void
 }
 
@@ -21,13 +21,14 @@ const Writer: React.FC<Props> = ({setIsRerender, item, scroll}) => {
   useEffect(() => {
     scroll()
     const timeout = setTimeout(() => {
-      if(typeof item.object === 'string')
-      setTypedSuperpower(item.object.slice(0, typedSuperpower.length + 1))
+      if('input' in item)
+      setTypedSuperpower(item.input.slice(0, typedSuperpower.length + 1))
     }, 100)
     return () => clearTimeout(timeout)
   }, [typedSuperpower])
   useEffect(() => {
-    if(typedSuperpower === item.object) {
+
+    if('input' in item && typedSuperpower === item.input) {
       setIsTyping(false)
       setIsRerender();
       setTimeout(() => {

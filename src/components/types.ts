@@ -1,13 +1,19 @@
-export type Data = DataObject[]
+export type ConsoleObjects = Array<ConsoleObjectType>;
 
-export interface DataObject {
-  object: Text,
-  timing: number | null
+export type ConsoleObjectType = Input | Output| Frames;
+export interface Input {
+  input: string;
+  timing: number;
 }
-
-export type Text = string | Frame[];
-
+export interface Output {
+  output: string;
+  timing: number;
+}
+export interface Frames {
+  frames: Frame[];
+}
 export interface Frame {
-  frame: string[],
-  timing: number | null
+  value: string;
+  style?: string[];
+  timing: number;
 }

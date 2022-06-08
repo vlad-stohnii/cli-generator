@@ -2,45 +2,43 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import EditEditor from './EditEditor';
 import Popup from './Popup';
-import { Data, DataObject } from './types';
+import { ConsoleObjectType, ConsoleObjects } from './types';
 
 interface Props {
-  item: DataObject;
-  setData: React.Dispatch<React.SetStateAction<Data>>;
+  item: ConsoleObjectType;
+  setData: React.Dispatch<React.SetStateAction<ConsoleObjects>>;
   itemId: number;
-  data: Data;
+  data: ConsoleObjects;
 }
 
 const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
-  let renderedItem: any;
   const [isEditing, setIsEditing] = useState(false);
+  let renderedItem: string | string[] | null = null;
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
-  if (typeof item.object === 'string') {
-      renderedItem = '~ ' + item.object;
-  } else {
-    renderedItem = [];
-    item.object.forEach((i) => {
-      renderedItem.push(i.frame);
-    });
+  if ('input' in item) {
+    renderedItem = '~ ' + item.input;
+  }
+  if ('output' in item) {
+    renderedItem = item.output;
+  }
+  if ('frames' in item) {
+    renderedItem = item.frames.map((frame) => frame.value);
   }
   return (
     <>
       {isEditing && <EditEditor close={toggleEdit} data={data} item={item} itemId={itemId} setData={setData} />}
-      {!isEditing && <Block>
+      {renderedItem && !isEditing && <Block>
         <BlockContent>
-          {typeof renderedItem === 'string' && renderedItem}
-          {typeof renderedItem === 'object' && renderedItem.length === 1 && renderedItem.map((item: any, index: number) =>
-            <div key={index}>
-              {item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && item.length > 3 && '...'}</div>)}
-            </div>)}
-          {typeof renderedItem === 'object' && renderedItem.length > 1 && renderedItem.map((item: any, index: number) =>
+          {typeof renderedItem === 'string' && <CropLine>{renderedItem}</CropLine>}
+          {typeof renderedItem === 'object' && renderedItem.map((item, index: number) =>
             <Frame key={index}>
-              {item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && '...'}</div>)}
+              <CropLine>{item}</CropLine>
+              {/*{item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && '...'}</div>)}*/}
             </Frame>)}
         </BlockContent>
-        <Popup toggleEdit={toggleEdit} data={data} setData={setData} itemId={itemId} />
+        <Popup toggleEdit={toggleEdit} setData={setData} itemId={itemId} />
       </Block>}
     </>
   );
@@ -70,4 +68,12 @@ const BlockContent = styled.div`
   align-self: center;
   margin: 8px 0 8px 8px;
 `;
+const CropLine = styled.div`
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.3em;
+  max-height: 3.9em;
+`
 export default EditItem;

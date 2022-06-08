@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import Textarea from './Textarea';
 import DropDown from './DropDown';
 import { options } from '../constants';
-import { Data, Frame } from './types';
 import InlineDropDown from './InlineDropDown';
+import { ConsoleObjects, Frame } from './types';
 
 interface Props {
   close: () => void,
-  data: Data,
-  setData: React.Dispatch<React.SetStateAction<Data>>
+  data: ConsoleObjects,
+  setData: React.Dispatch<React.SetStateAction<ConsoleObjects>>
 }
 
 const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
@@ -17,13 +17,13 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   const [type, setType] = useState('typing');
   const [textarea, setTextarea] = useState<string>('');
   const [frameIndex, setFrameIndex] = useState<number>(1);
-  const [frameList, setFrameList] = useState<string[][]>([[]]);
+  const [frameList, setFrameList] = useState<string[]>([]);
   const [timings, setTimings] = useState<number[]>([]);
   const [timing, setTiming] = useState<number>(500);
 
   const onChangeFrame = (e: React.ChangeEvent<HTMLTextAreaElement>, key: number) => {
     let tempArray = [...frameList];
-    tempArray[key] = (e.target.value).split('\n');
+    tempArray[key] = (e.target.value);
     setFrameList(tempArray);
   };
   const onChangeTiming = (ms: number, key: number) => {
@@ -34,10 +34,10 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
 
   useEffect(() => {
     if (frameIndex === 1) {
-      setFrameList([[]]);
+      setFrameList(['']);
       setTimings([500]);
     } else {
-      setFrameList(f => [...f, []]);
+      setFrameList(f => [...f, '']);
       setTimings(t => {
         let copy = [...t];
         copy = [...copy, copy[timings.length - 1]];
@@ -49,35 +49,29 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
   const saveElement = () => {
     if (type === 'typing') {
       setData([...data, {
-        object: textarea,
+        input: textarea,
         timing: timing
       }]);
       setTextarea('');
     }
     if (type === 'output') {
       setData([...data, {
-        object: [{
-          frame: textarea.split('\n'),
-          timing: null
-        }],
+        output: textarea,
         timing: timing
       }]);
       setTextarea('');
     }
     if (type === 'frames') {
-      let frameObject: Frame[] = [];
+      let framesObject: Frame[] = [];
       frameList.forEach((element, index) => {
-        frameObject.push({
-          timing: timings[index] || null,
-          frame: element
-        });
+        framesObject.push({
+          timing: timings[index],
+          value: element
+        })
       });
-      frameObject[frameList.length - 1].timing = null;
       setData([...data, {
-        object: frameObject,
-        timing: timings[frameList.length - 1]
+        frames: framesObject
       }]);
-
       setTextarea('');
       setFrameIndex(1);
     }
@@ -98,7 +92,7 @@ const NewEditor: React.FC<Props> = ({ close, data, setData }) => {
       </EditorTypes>
       {type === 'frames' ? frameList.map((frame, key) =>
           <TextAreaWithTiming key={key}>
-            <Textarea value={frame.join('\n')}
+            <Textarea value={frame}
                       onChangeFrame={onChangeFrame} index={key} />
             <DropDown options={options} selected={timings[key]} setItem={onChangeTiming} index={key} />
           </TextAreaWithTiming>

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Data } from './types';
+import { ConsoleObjects } from './types';
 
 interface Props {
   toggleEdit: () => void
-  setData: React.Dispatch<React.SetStateAction<Data>>
-  data: any
+  setData: React.Dispatch<React.SetStateAction<ConsoleObjects>>
   itemId: number
 }
 
-const Popup: React.FC<Props> = ({ toggleEdit, setData, data, itemId }) => {
+const Popup: React.FC<Props> = ({ toggleEdit, setData, itemId }) => {
   const [isOpened, setIsOpened] = useState(false);
   const openToggle = () => setIsOpened(!isOpened);
   return (
@@ -21,7 +20,7 @@ const Popup: React.FC<Props> = ({ toggleEdit, setData, data, itemId }) => {
       </Dots>
       {isOpened && <Pop>
         <Button onClick={toggleEdit}>Edit</Button>
-        <Button onClick={() => setData(() => {
+        <Button onClick={() => setData((data) => {
           const newArr = [...data];
           newArr.splice(itemId, 1);
           return newArr;
