@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import EditEditor from './EditEditor';
 import Popup from './Popup';
 import { ConsoleObjectType, ConsoleObjects } from './types';
+import DropDown from './DropDown';
+import { options } from '../constants';
 
 interface Props {
   item: ConsoleObjectType;
@@ -14,6 +16,14 @@ interface Props {
 const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
   const [isEditing, setIsEditing] = useState(false);
   let renderedItem: string | string[] | null = null;
+  const changeTiming = (ms: number, index: number) => {
+    let tempdata = [...data];
+    let element = tempdata[itemId];
+    if('timing' in element) {
+      element.timing = ms;
+    }
+    setData([...tempdata])
+  }
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
@@ -38,6 +48,7 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
               {/*{item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && '...'}</div>)}*/}
             </Frame>)}
         </BlockContent>
+        {'timing' in item && <DropDown options={options} setItem={changeTiming} index={itemId} selected={item.timing}/>}
         <Popup toggleEdit={toggleEdit} setData={setData} itemId={itemId} />
       </Block>}
     </>
@@ -55,7 +66,6 @@ const Block = styled.div`
   white-space: break-spaces;
   word-break: break-all;
   height: 100%;
-  position: relative;
   display: flex;
   justify-content: space-between;
   width: auto;

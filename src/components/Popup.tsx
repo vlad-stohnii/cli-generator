@@ -12,21 +12,23 @@ const Popup: React.FC<Props> = ({ toggleEdit, setData, itemId }) => {
   const [isOpened, setIsOpened] = useState(false);
   const openToggle = () => setIsOpened(!isOpened);
   return (
-    <Container onClick={openToggle}>
-      <Dots>
-        <div />
-        <div />
-        <div />
-      </Dots>
-      {isOpened && <Pop>
-        <Button onClick={toggleEdit}>Edit</Button>
-        <Button onClick={() => setData((data) => {
-          const newArr = [...data];
-          newArr.splice(itemId, 1);
-          return newArr;
-        })}>Delete</Button></Pop>}
+    <>
+      <Container onClick={openToggle}>
+        <Dots>
+          <div />
+          <div />
+          <div />
+        </Dots>
+        {isOpened && <Pop>
+          <Button onClick={toggleEdit}>Edit</Button>
+          <Button onClick={() => setData((data) => {
+            const newArr = [...data];
+            newArr.splice(itemId, 1);
+            return newArr;
+          })}>Delete</Button></Pop>}
+      </Container>
       {isOpened && <Background onClick={openToggle}/>}
-    </Container>
+    </>
   );
 };
 
@@ -34,8 +36,9 @@ const Popup: React.FC<Props> = ({ toggleEdit, setData, itemId }) => {
 const Container = styled.div`
   width: 40px;
   min-width: 40px;
+  position: relative;
   height: 40px;
-  margin: 4px 4px 4px 8px;
+  margin: 4px 4px 4px 0;
   align-items: center;
   border-radius: 2px;
   background-color: #071e38;
@@ -83,7 +86,7 @@ const Pop = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 48px;
+  top: 40px;
   right: 0;
 `;
 const Background = styled.div`
