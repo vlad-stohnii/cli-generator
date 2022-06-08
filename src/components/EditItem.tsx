@@ -59,6 +59,7 @@ const Frame = styled.div`
   background-color: #1a3e6c;
   padding: 4px;
   margin-bottom: 8px;
+  margin-right: 8px;
 `;
 
 
