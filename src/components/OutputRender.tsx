@@ -9,10 +9,9 @@ interface Props {
 
 const OutputRender: React.FC<Props> = ({setRerender, item, scroll}) => {
   useEffect(() => {
-    return () =>
-    {
+    setRerender();
+    return () =>  {
       scroll()
-      setRerender();
     }
   },[])
   return (
