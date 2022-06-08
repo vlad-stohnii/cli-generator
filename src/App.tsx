@@ -37,6 +37,10 @@ function App() {
   }, [dataForRender, trigger])
 
   useEffect(() => {
+    console.log(dataFromEditor);
+  }, [dataFromEditor])
+
+  useEffect(() => {
     const nextTiming = dataForRender[index - 1]?.timing;
     const timing = nextTiming ? nextTiming : 1000;
     const delay = setTimeout(() => {
