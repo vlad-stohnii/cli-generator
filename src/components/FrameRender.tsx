@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ConsoleObjectType } from './components/types';
+import { ConsoleObjectType } from './types';
 
 
 interface Props {

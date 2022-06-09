@@ -1,8 +1,8 @@
 import React from 'react';
 import Writer from './Writer';
 import FrameRender from './FrameRender';
-import { ConsoleObjectType } from './components/types';
-import OutputRender from './components/OutputRender';
+import { ConsoleObjectType } from './types';
+import OutputRender from './OutputRender';
 
 interface Props {
   item: ConsoleObjectType,

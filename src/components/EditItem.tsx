@@ -45,7 +45,6 @@ const EditItem: React.FC<Props> = ({ item, setData, data, itemId }) => {
           {typeof renderedItem === 'object' && renderedItem.map((item, index: number) =>
             <Frame key={index}>
               <CropLine>{item}</CropLine>
-              {/*{item.map((i: any, key: number) => key <= 2 && <div key={key}>{i}{key === 2 && '...'}</div>)}*/}
             </Frame>)}
         </BlockContent>
         {'timing' in item && <DropDown options={options} setItem={changeTiming} index={itemId} selected={item.timing}/>}

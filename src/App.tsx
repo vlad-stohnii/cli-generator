@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
-import ConsoleObject from './ConsoleObject';
+import ConsoleObject from './components/ConsoleObject';
 import styled from 'styled-components';
 import EditorSide from './components/EditorSide';
 import Dots from './components/Dots';
